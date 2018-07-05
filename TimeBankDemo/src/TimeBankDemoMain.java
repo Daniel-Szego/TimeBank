@@ -45,6 +45,8 @@ public class TimeBankDemoMain implements SwirldMain {
 	public  String serviceToOffer;
 	/** Initial balances */
 	public  Integer initialBalances;
+	/** a console window for errors */
+	public Console errorconsole;
 	
 
 	
@@ -72,15 +74,27 @@ public class TimeBankDemoMain implements SwirldMain {
 		this.platform = platform;
 		this.selfId = id;
 		this.console = platform.createConsole(true); // create the window, make it visible
-		//this.window = platform.createWindow(true);		
-		//initWindow();
+		this.errorconsole = platform.createConsole(true); // create the window, make it visible
+
 		String[] pars = platform.getParameters();
 		initialBalances = Integer.parseInt(pars[0]);
 		
 		platform.setAbout("Hello TimeBank v. 1.0\n"); // set the browser's "about" box
 		platform.setSleepAfterSync(sleepPeriod);
+		//this.window = platform.createWindow(true);		
+		//initWindow();
+
 	}	
 
+	protected void LogException(Exception e) {
+		errorconsole.out.println(e.toString() + " " +  e.getMessage() + " ");
+	}
+	
+	protected void LogMessage(String message) {
+		errorconsole.out.println(message);
+	}
+
+	
 	@Override
 	public void run() {
 		try {
@@ -140,11 +154,11 @@ public class TimeBankDemoMain implements SwirldMain {
 			try {
 				Thread.sleep(sleepPeriod);
 			} catch (Exception e) {
+				LogException(e);
 			}
 		}
 		} catch(Exception e){
-			console.out.println(e.toString());
-		}
+			LogException(e);		}
 	}
 
 	@Override
@@ -155,28 +169,36 @@ public class TimeBankDemoMain implements SwirldMain {
 	
 	protected void initWindow(){
 		
+		try {
 		// label 1
-		Container c = window.getContentPane();
-		Label titleLbl = new Label ();		
-		Font font = titleLbl.getFont();
-		// same font but bold
-		//Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
-		//titleLbl.setFont(boldFont);
-		titleLbl.setText("Timebank Demo");				
-		window.add(titleLbl, BorderLayout.AFTER_LAST_LINE);
-		
-		// label 2
-		String myName = platform.getState().getAddressBookCopy()
-				.getAddress(selfId).getSelfName();
-		Label nameLbl = new Label ();
-		nameLbl.setText("User Name" + myName);
-		window.add(nameLbl, BorderLayout.AFTER_LAST_LINE);
-		
-		// label 3
-		Label listLbl = new Label ();
-		listLbl.setText("List of services:");
-		window.add(listLbl,  BorderLayout.AFTER_LAST_LINE);
-		
+			Integer i = 0;
+			Integer j = 1;
+			j = j/i;
+			
+			Container c = window.getContentPane();
+			Label titleLbl = new Label ();		
+			Font font = titleLbl.getFont();
+			// same font but bold
+			//Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
+			//titleLbl.setFont(boldFont);
+			titleLbl.setText("Timebank Demo");				
+			window.add(titleLbl, BorderLayout.AFTER_LAST_LINE);
+			
+			// label 2
+			String myName = platform.getState().getAddressBookCopy()
+					.getAddress(selfId).getSelfName();
+			Label nameLbl = new Label ();
+			nameLbl.setText("User Name" + myName);
+			window.add(nameLbl, BorderLayout.AFTER_LAST_LINE);
+			
+			// label 3
+			Label listLbl = new Label ();
+			listLbl.setText("List of services:");
+			window.add(listLbl,  BorderLayout.AFTER_LAST_LINE);
+		}
+		catch(Exception e){
+			LogException(e);
+		}
 		
 		
 	}
