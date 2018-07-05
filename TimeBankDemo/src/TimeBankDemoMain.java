@@ -107,22 +107,36 @@ public class TimeBankDemoMain implements SwirldMain {
 		
 		String lastReceivedBalance = "";
 		String lastReceivedServiceDB = "";
-
+		
+		boolean called = false;
+		
 		while (true) {
 			TimeBankDemoState state = (TimeBankDemoState) platform
 					.getState();
 			String receivedBalance = state.getReceivedBalances();
 			String serviceDB =  state.getReceivedServiceDB();
+			Integer differenceExistedBalance = 0;
+			Integer differenceExistedService = 0;
 			
 			if (!lastReceivedBalance.equals(receivedBalance)) {
 				lastReceivedBalance = receivedBalance;
 				console.out.println("Balances: " + receivedBalance); // print all received transactions
+				differenceExistedBalance +=1;
 			}
 			if(!lastReceivedServiceDB.equals(serviceDB)) {
 				lastReceivedServiceDB = serviceDB;
 				console.out.println("Services: " + serviceDB); // print all received transactions
-			} 
-			
+				differenceExistedService +=1;
+			}	
+			if (lastReceivedServiceDB.equals(serviceDB) && lastReceivedBalance.equals(receivedBalance) && !called && (differenceExistedService > 0) && (differenceExistedBalance > 0)){
+				String useService = "useservice name:" + myName + " service: " +  serviceToOffer + "";
+				byte[] useServicetransaction = useService.getBytes(StandardCharsets.UTF_8);
+				platform.createTransaction(useServicetransaction);		
+				console.out.println("Calling Service " + myName + " " + serviceToOffer);
+				called = true;
+			}
+
+	
 			try {
 				Thread.sleep(sleepPeriod);
 			} catch (Exception e) {

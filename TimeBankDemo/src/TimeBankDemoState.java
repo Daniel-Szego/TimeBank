@@ -147,8 +147,9 @@ public class TimeBankDemoState implements SwirldState {
 					String serviceName = transactionString.substring(transactionString.indexOf("service:") + 9);
 					services.put(name, serviceName);									
 			}else if (transactionString.startsWith("useservice")) {
-	
-				
+				String name = transactionString.substring(transactionString.indexOf("name:") + 5, transactionString.indexOf("service:") - 1);
+				String serviceName = transactionString.substring(transactionString.indexOf("service:") + 9);
+				balances.put(name, balances.get(name) - 1);		
 			}else if (transactionString.startsWith("initbalance")) {
 					String name = transactionString.substring(transactionString.indexOf("name:") + 5, transactionString.indexOf("balance:") - 1);
 					Integer balance = Integer.parseInt(transactionString.substring(transactionString.indexOf("balance:") + 9));
